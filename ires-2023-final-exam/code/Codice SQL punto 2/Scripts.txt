@@ -1,0 +1,48 @@
+CREATE DATABASE ShipContainerDatabase;
+USE ShipContainerDatabase; --creazione database--
+
+CREATE TABLE Containers
+(
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    Code NVARCHAR(255) NOT NULL,
+    Length INT NOT NULL,
+    Type NVARCHAR(255) NOT NULL
+); --creazione tabella containers--
+
+CREATE TABLE Spots
+(
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    X INT NOT NULL,
+    Y INT NOT NULL,
+    ContainerId INT NULL,
+    FOREIGN KEY (ContainerId) REFERENCES Containers(Id)
+); --creazione tabella spots--
+
+
+DECLARE @RowCount INT = 4;
+DECLARE @ColumnCount INT = 5;
+DECLARE @Counter INT = 1;
+
+WHILE @Counter <= @RowCount
+BEGIN
+    DECLARE @X INT = @Counter - 1;
+    DECLARE @Y INT = 0;
+    
+    WHILE @Y < @ColumnCount
+    BEGIN
+        INSERT INTO Spots (X, Y) VALUES (@X, @Y);
+        SET @Y = @Y + 1;
+    END
+    
+    SET @Counter = @Counter + 1;
+END -- Inserimento degli spot (griglia 4x5)--
+
+
+INSERT INTO Containers (Code, Length, Type) VALUES ('CONT1', 2, 'TOYS');
+INSERT INTO Containers (Code, Length, Type) VALUES ('CONT2', 1, 'FOOD');-- Inserimento di container--
+
+
+UPDATE Spots SET ContainerId = 1 WHERE Id BETWEEN 1 AND 2;
+UPDATE Spots SET ContainerId = 2 WHERE Id = 3;-- Update degli spot occupati dai container--
+
+
